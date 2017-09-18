@@ -13,9 +13,7 @@
 *        return d
 *   The program should be compiled as   gcc mod-exp.c –o mod-exp
 *	The program should be executed as    ./mod-exp a b
-*	    Print out the result 
-
-**/
+*	    Print out the result
 **/
 #include <stdio.h>
 #include <stdlib.h>
