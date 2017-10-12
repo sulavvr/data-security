@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
         sscanf(argv[2], "%d", &n);
 
         // if number is even or multiple of 5, we return composite
-        if (n > 2 && (n % 2 == 0 || n % 5 == 0)) {
+        if ((n > 5) && (n % 2 == 0 || n % 5 == 0)) {
             puts("composite");
         } else {
             char *result = millerRabin(a, n);
@@ -28,7 +28,6 @@ int main(int argc, char **argv) {
 char *millerRabin(int a, int n) {
     struct nums kq = getKQ(n, 1); // q = 1
 
-    // printf("%d %d\n", kq.q, kq.k);
     int aq = (int) pow(a, kq.q);
     if (aq % n == 1) {
         return "maybe prime";
@@ -38,7 +37,8 @@ char *millerRabin(int a, int n) {
     for (; i < kq.k; i++) {
         int twoiq = (int) pow(2, i) * kq.q;
         int a2iq = (int) pow(a, twoiq);
-        if (a2iq % n == 1) {
+
+        if (a2iq % n == (n - 1)) {
             return "maybe prime";
         }
     }
@@ -48,9 +48,7 @@ char *millerRabin(int a, int n) {
 
 struct nums getKQ(int n, int q) {
     struct nums num;
-    float f = log2((n - 1) / q);
-
-    printf("%d %f\n", q, f);
+    float f = log2((n - 1) / (float) q);
 
     if (ceilf(f) == f) {
         num.k = (int) f;
