@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
             puts("composite");
         } else {
             char *result = millerRabin(a, n);
-            printf("%s", result);
+            printf("%s\n", result);
         }
     }
     return 0;
