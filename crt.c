@@ -4,50 +4,57 @@
 int gcd(int, int);
 // function declaration to calculate the linear combinations
 int linearCombinations(int, int, int, int);
+struct AimiMinv {
+    int ai, mi, Miinv, Mi, ci;
+    void (*print) (const struct AimiMinv);
+    int (*recover) (const struct AimiMinv);
+};
+
+// function to print values of the struct
+void print(struct AimiMinv v) {
+    printf("%d\t%d\t%d\t%d\t%d\n", v.ai, v.mi, v.Miinv, v.Mi, v.ci);
+}
+
+// function for calculating the product of ai and ci of the struct
+int recover(struct AimiMinv v) {
+    return v.ai * v.ci;
+}
 
 int main(int argc, char **argv) {
+    // total count - 2 since first arg is the program and the second is A
     int mcount = argc - 2;
     int A;
     sscanf(argv[1], "%d", &A);
 
-    int i = 0;
-    int mi[mcount];
+    struct AimiMinv vals[mcount];
+    int i;
+    int sum = 0;
     int M = 1;
-    for (; i < mcount; i++) {
-        sscanf(argv[2 + i], "%d", &mi[i]);
-        M *= mi[i];
+
+    for (i = 0; i < mcount; i++) {
+        vals[i].print = print;
+        vals[i].recover = recover;
+
+        sscanf(argv[2 + i], "%d", &vals[i].mi);
+        M *= vals[i].mi;
     }
 
-    int Mi[mcount];
     for (i = 0; i < mcount; i++) {
-        Mi[i] = M / mi[i];
-    }
-
-    int Miinv[mcount];
-    for (i = 0; i < mcount; i++) {
-        if (gcd(Mi[i], mi[i]) == 1) {
-            Miinv[i] = linearCombinations(Mi[i], mi[i], 1, 1);
+        vals[i].Mi = M / vals[i].mi;
+        if (gcd(vals[i].Mi, vals[i].mi) == 1) {
+            vals[i].Miinv = linearCombinations(vals[i].Mi, vals[i].mi, 1, 1);
         }
+        vals[i].ai = A % vals[i].mi;
+        vals[i].ci = vals[i].Mi * vals[i].Miinv;
+        sum += vals[i].recover(vals[i]);
     }
 
-    int Ci[mcount];
-
+    printf("ai\tmi\tMiinv\tMi\tCi\n");
     for (i = 0; i < mcount; i++) {
-        Ci[i] = Mi[i] * Miinv[i];
+        vals[i].print(vals[i]);
     }
 
-    int ai[mcount];
-
-    for (i = 0; i < mcount; i++) {
-        ai[i] = A % Mi[i];
-    }
-
-    int s = 0;
-    for (i = 0; i < mcount; i++) {
-        s += ai[i] * Ci[i];
-    }
-
-    printf("%d", s);
+    printf("Recovering A = sum(ai * ci) mod m: %d\n", sum % M);
 
     return 0;
 }
