@@ -76,6 +76,7 @@ struct nums getKQ(int n, int q) {
     struct nums num;
     float f = log2((n - 1) / (float) q);
 
+    // if we get integer when doing a log, we get the value of k
     if (ceilf(f) == f) {
         num.k = (int) f;
         num.q = q;
@@ -84,7 +85,7 @@ struct nums getKQ(int n, int q) {
     }
 
     q += 2; // odd
-    return getKQ(n, q);
+    return getKQ(n, q); // call again if integer for k not found
 }
 
 // mod exp algorithm to get the mod of large numbers (from previous assigment)
